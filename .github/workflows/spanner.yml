@@ -29,7 +29,7 @@ jobs:
           
       - name: Run Python
         run: |
-          cd ${{ env.GITHUB_WORKSPACE }}/scripts/
+          cd ${{ env.GITHUB_WORKSPACE }}
           pwd
           ls
           python db.py
