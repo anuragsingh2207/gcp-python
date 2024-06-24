@@ -1,7 +1,7 @@
 import os
 
 # Read SQL file
-with open('./sql/db.sql', 'r') as f:
+with open('../sql/db.sql', 'r') as f:
     sql_file = f.read()
 
 # Split the file into separate queries
