@@ -1,0 +1,34 @@
+name: Spanner DDL Deploy
+on:
+  push:
+   branches: 
+    - feature*
+
+  workflow_dispatch:
+
+jobs:
+  spanner-ddl-deploy:
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    name: Deploy DDL
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      
+      # - uses: Authenticate to Google Cloud
+      #   with:
+      #     project_id: 'my-project'
+      #     workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10' 
+          
+      - name: Run Python
+        run: |
+          cd scripts/
+          python db.py
+
