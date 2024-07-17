@@ -33,7 +33,7 @@ CREATE TABLE Singer2 (
 CREATE TABLE Singer3 (
             SingerId     INT64 NOT NULL,
             FirstName    STRING(1024),
-            LastName     STRING(102),
+            LastName     STRING(1024),
             SingerInfo   BYTES(MAX),
             FullName   STRING(2048) AS (
                 ARRAY_TO_STRING([FirstName, LastName], " ")
