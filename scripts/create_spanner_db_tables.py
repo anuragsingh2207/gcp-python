@@ -21,9 +21,10 @@ print("Running python script..")
 
 result = subprocess.run(['git', 'diff', '--unified=0', 'HEAD', '../sql/db.sql'], stdout=subprocess.PIPE)
 diff_output = result.stdout.decode('utf-8')
+print("Fetched differences...")
 
 new_lines = [line[1:] for line in diff_output.splitlines() if line.startswith('+') and not line.startswith('+++')]
-
+print("Fetched new lines...")
 
 for line in new_lines:
     print("######\n"+line+"\n###")
