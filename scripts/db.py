@@ -9,7 +9,7 @@ diff_output = result.stdout.decode('utf-8')
 new_commands = [line[1:] for line in diff_output.splitlines() if line.startswith('+')]
 
 # Read the old SQL file
-with open('/sql/db.sql', 'r') as f:
+with open('../sql/db.sql', 'r') as f:
     sql_file = f.read()
 
 # Split the file into separate queries
