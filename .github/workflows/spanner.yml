@@ -17,8 +17,8 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
-        # with:
-        #   fetch-depth: 0 
+        with:
+          fetch-depth: 0 
 
       - name: Authenticate with Google Cloud
         uses: 'google-github-actions/auth@v2'
@@ -33,10 +33,6 @@ jobs:
       - name: Run Python
         run: |
            cd scripts
-           pwd
-           ls
-           set -x
-           git diff --unified=0 HEAD ../sql/db.sql
            #pip install -r requirements.txt
            python db.py
           
