@@ -11,8 +11,8 @@ from google.cloud import spanner
 from google.cloud.spanner_admin_instance_v1.types import spanner_instance_admin
 from google.cloud.spanner_v1 import DirectedReadOptions, param_types
 from google.cloud.spanner_v1.data_types import JsonObject
-from google.protobuf import field_mask_pb2  # type: ignore
-from testdata import singer_pb2
+
+
 
 OPERATION_TIMEOUT_SECONDS = 240
 
