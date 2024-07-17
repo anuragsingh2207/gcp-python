@@ -31,8 +31,7 @@ jobs:
       - name: Run Python
         run: |
            cd scripts
-           pwd
-           ls
+           pip install -r requirements.txt
            python create_spanner_db_tables.py
           
 
