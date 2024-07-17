@@ -35,7 +35,8 @@ jobs:
            cd scripts
            pwd
            ls
-           pip install -r requirements.txt
+           git diff --unified=0 HEAD ../sql/db.sql
+           #pip install -r requirements.txt
            python db.py
           
 
