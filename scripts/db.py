@@ -17,7 +17,17 @@
 
 import subprocess
 
-print("Running python script..")
+print("Running python script...")
+
+
+print("Print Current Directory..")
+result = subprocess.run(["pwd"], capture_output=True, text=True)
+print(result.stdout)
+
+print("Listing files in Current Directory..")
+result1 = subprocess.run(["pwd"], capture_output=True, text=True)
+print(result1.stdout)
+
 
 # Get diff between the HEAD and current state
 result = subprocess.run(['git', 'diff', '--unified=0', 'HEAD', '../sql/db.sql'], stdout=subprocess.PIPE)
