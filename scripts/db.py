@@ -8,14 +8,11 @@ result = subprocess.run(["ls", "-l"], capture_output=True, text=True)
 print(result.stdout)
 
 print("Changing directory and Listing files in current directory")
-# print current working directory
-print(os.getcwd())
+command_string = "cd .. && ls -l"
+result1 = subprocess.run(command_string, capture_output=True, text=True, shell=True)
 
-# change directory
-os.chdir('../sql/')
-
-# print current working directory
-print(os.getcwd())
+result2 = subprocess.run(["ls", "-l"], capture_output=True, text=True)
+print(result2.stdout)
 
 
 
