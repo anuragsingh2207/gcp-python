@@ -4,9 +4,15 @@ import subprocess
 print("Running python script..")
 
 
-# Change directory to the location of db.sql
-os.chdir('../sql/')
-  
+# # print current working directory
+# print(os.getcwd())
+
+# # change directory
+# os.chdir('../sql/')
+
+# # print current working directory
+# print(os.getcwd())
+
 # Perform git diff
 result = subprocess.run(['git', 'diff', '--unified=0', 'HEAD', 'db.sql'], stdout=subprocess.PIPE)
 diff_output = result.stdout.decode('utf-8')
