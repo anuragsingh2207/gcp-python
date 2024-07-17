@@ -3,8 +3,19 @@ import subprocess
 
 print("Running python script..")
 
-# Get diff between the latest commit and current uncommitted changes
-result = subprocess.run(['git', 'diff', '--unified=0', 'HEAD', '../sql/db.sql'], stdout=subprocess.PIPE)
+# Get the branch name from GitHub environment variable
+branch_name = os.getenv('GITHUB_HEAD_REF')
+
+# If running this script locally, GITHUB_HEAD_REF will not be set. 
+# Fallback to HEAD, so it still works for local testing
+if not branch_name:
+    branch_name = 'HEAD'
+
+print(f"Getting diff for branch {branch_name}")
+
+# Get diff between the latest commit of the pull request branch and current uncommitted changes
+result = subprocess.run(['git', 'diff', '--unified=0', f'origin/{branch_name}', '../sql/db.sql'], 
+                        stdout=subprocess.PIPE)
 diff_output = result.stdout.decode('utf-8')
 
 # Extract additions in the current uncommitted changes
