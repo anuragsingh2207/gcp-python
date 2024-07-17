@@ -3,19 +3,21 @@ import subprocess
 
 print("Running python script..")
 
-
-# # print current working directory
-# print(os.getcwd())
-
-# # change directory
-# os.chdir('../sql/')
-
-# # print current working directory
-# print(os.getcwd())
-
 print("Listing files in current directory")
 result = subprocess.run(["ls", "-l"], capture_output=True, text=True)
 print(result.stdout)
+
+print("Changing directory and Listing files in current directory")
+# print current working directory
+print(os.getcwd())
+
+# change directory
+os.chdir('../sql/')
+
+# print current working directory
+print(os.getcwd())
+
+
 
 
 # Perform git diff
