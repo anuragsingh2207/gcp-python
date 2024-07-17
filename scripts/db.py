@@ -2,7 +2,7 @@ import os
 import subprocess
 
 # Get diff between the latest commit and current uncommitted changes
-result = subprocess.run(['git', 'diff', 'HEAD', '/sql/db.sql'], stdout=subprocess.PIPE)
+result = subprocess.run(['git', 'diff', 'HEAD', '../sql/db.sql'], stdout=subprocess.PIPE)
 diff_output = result.stdout.decode('utf-8')
 
 # Extract additions in the current uncommitted changes
