@@ -3,7 +3,7 @@ import subprocess
 print("Running python script..")
 
 # Get diff between the latest commit and current uncommitted changes
-result = subprocess.run(['git', 'diff', 'HEAD', '../sql/db.sql'], stdout=subprocess.PIPE)
+result = subprocess.run(['git', 'diff', '--word-diff', 'HEAD', '../sql/db.sql'], stdout=subprocess.PIPE)
 diff_output = result.stdout.decode('utf-8')
 print("Fetched differences:",diff_output)
 
