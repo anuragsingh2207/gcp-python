@@ -17,12 +17,12 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
-      
-      # - uses: Authenticate to Google Cloud
-      #   with:
-      #     project_id: 'my-project'
-      #     workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
-     
+
+      - name: Authenticate with Google Cloud
+        uses: 'google-github-actions/auth@v2'
+        with:
+          service_account: ${{ secrets.SERVICE_ACCOUNT }}
+          workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
 
       - uses: actions/setup-python@v5
         with:
@@ -33,6 +33,6 @@ jobs:
            cd scripts
            pwd
            ls
-           python db.py
+           python create_spanner_db_tables.py
           
 
