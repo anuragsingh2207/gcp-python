@@ -1,17 +1,17 @@
-# import os
-# import subprocess
-# import argparse
-# import base64
-# import datetime
-# import decimal
-# import json
-# import logging
-# import time
+import os
+import subprocess
+import argparse
+import base64
+import datetime
+import decimal
+import json
+import logging
+import time
 
-# from google.cloud import spanner
-# from google.cloud.spanner_admin_instance_v1.types import spanner_instance_admin
-# from google.cloud.spanner_v1 import DirectedReadOptions, param_types
-# from google.cloud.spanner_v1.data_types import JsonObject
+from google.cloud import spanner
+from google.cloud.spanner_admin_instance_v1.types import spanner_instance_admin
+from google.cloud.spanner_v1 import DirectedReadOptions, param_types
+from google.cloud.spanner_v1.data_types import JsonObject
 
 
 # OPERATION_TIMEOUT_SECONDS = 240
@@ -92,10 +92,10 @@
 
 #################################
 
-import os
-import subprocess
+# import os
+# import subprocess
 
-from google.cloud import spanner
+# from google.cloud import spanner
 
 OPERATION_TIMEOUT_SECONDS = 240
 
@@ -168,7 +168,7 @@ print("\nPrint newly added lines one at a time")
 for line in new_lines:
     print(line)
 
-print("")
+print("Starting the table creation...")
 
 instance_id = "demo-instance"
 database_id = "demo-database"
