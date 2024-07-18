@@ -3,27 +3,24 @@ import subprocess
 
 print("Running python script...")
 
-print(" current directory")
-result3 = subprocess.run(["pwd"], capture_output=True, text=True)
-print(result3.stdout)
+print("Current directory:")
+result = subprocess.run(["pwd"], capture_output=True, text=True)
+print(result.stdout)
 
 print("Listing files in current directory")
 result = subprocess.run(["ls", "-l"], capture_output=True, text=True)
 print(result.stdout)
 
-print("Changing directory and Listing files in the changed directory")
-result1 = subprocess.run(["ls", "-l"], cwd=os.path.dirname(os.getcwd()), capture_output=True, text=True)
-print(result1.stdout)
+print("Changing directory to 'SQL' and staying there")
+os.chdir('sql')
 
-print(" current directory - This remains the same, as it didn't change")
-result4 = subprocess.run(["pwd"], capture_output=True, text=True)
-print(result4.stdout)
+print("Current directory after change:")
+result = subprocess.run(["pwd"], capture_output=True, text=True)
+print(result.stdout)
 
-print("Again Listing files in current directory")
-result2 = subprocess.run(["ls", "-l"], capture_output=True, text=True)
-print(result2.stdout)
-
-
+print("Listing files in new current directory")
+result = subprocess.run(["ls", "-l"], capture_output=True, text=True)
+print(result.stdout)
 
 
 # Perform git diff
