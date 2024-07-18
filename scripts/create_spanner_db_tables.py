@@ -16,6 +16,8 @@ from google.cloud.spanner_v1.data_types import JsonObject
 
 GOOGLE_APPLICATION_CREDENTIALS=os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
+print("GAC:", GOOGLE_APPLICATION_CREDENTIALS)
+
 instance_id = "demo-instance"
 database_id = "demo-database"
 OPERATION_TIMEOUT_SECONDS = 240
