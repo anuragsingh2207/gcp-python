@@ -11,8 +11,12 @@ print("Listing files in current directory")
 result = subprocess.run(["ls", "-l"], capture_output=True, text=True)
 print(result.stdout)
 
+# command_string = "cd .. && ls -l "
+# result1 = subprocess.run(command_string, capture_output=True, text=True, shell=True)
+# print(result1.stdout)
+
 print("Changing directory to 'SQL' and staying there")
-os.chdir('sql')
+os.chdir('../sql')
 
 print("Current directory after change:")
 result = subprocess.run(["pwd"], capture_output=True, text=True)
