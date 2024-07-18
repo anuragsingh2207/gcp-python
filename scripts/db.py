@@ -23,7 +23,7 @@ result = subprocess.run(["ls", "-l"], capture_output=True, text=True)
 print(result.stdout)
 
 
-Perform git diff
+#Perform git diff
 result = subprocess.run(['git', 'diff', '--unified=0', 'HEAD', 'db.sql'], stdout=subprocess.PIPE)
 diff_output = result.stdout.decode('utf-8')
 
