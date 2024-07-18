@@ -29,6 +29,10 @@ diff_output = result.stdout.decode('utf-8')
 
 print(diff_output)
 
+print("Listing files in new current directory")
+result = subprocess.run(["ls", "-l"], capture_output=True, text=True)
+print(result.stdout)
+
 # # Extract additions in the current uncommitted changes
 # new_lines = [line[1:] for line in diff_output.splitlines() if line.startswith('+') and not line.startswith('+++')]
 
