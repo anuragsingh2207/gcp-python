@@ -96,37 +96,42 @@ from google.cloud.spanner_v1.data_types import JsonObject
 # import subprocess
 
 # from google.cloud import spanner
-
+instance_id = "demo-instance"
+database_id = "demo-database"
 OPERATION_TIMEOUT_SECONDS = 240
 
 def create_database(instance_id, database_id, new_lines):
     """Creates a database and tables for sample data."""
-    from google.cloud.spanner_admin_database_v1.types import spanner_database_admin
-    print("Imported library...")
+    try:
+        from google.cloud.spanner_admin_database_v1.types import spanner_database_admin
+        print("Imported library...")
+        
+        spanner_client = spanner.Client()
+        database_admin_api = spanner_client.database_admin_api
+        print("Instantiated object for spanner client...")
 
-    spanner_client = spanner.Client()
-    database_admin_api = spanner_client.database_admin_api
-    print("Instantiated object for spanner client...")
-
-    request = spanner_database_admin.CreateDatabaseRequest(
-        parent=database_admin_api.instance_path(spanner_client.project, instance_id),
-        create_statement=f"CREATE DATABASE `{database_id}`",
-        extra_statements=new_lines
-    )
-    print("Connection string configured...")
-
-    operation = database_admin_api.create_database(request=request)
-
-    print("Waiting for operation to complete...")
-    database = operation.result(OPERATION_TIMEOUT_SECONDS)
-
-    print(
-        "Created database {} on instance {}".format(
-            database.name,
-            database_admin_api.instance_path(spanner_client.project, instance_id),
+        request = spanner_database_admin.CreateDatabaseRequest(
+            parent=database_admin_api.instance_path(spanner_client.project, instance_id),
+            create_statement=f"CREATE DATABASE `{database_id}`",
+            extra_statements=new_lines
         )
-    )
+        print("Connection string configured...")
 
+        operation = database_admin_api.create_database(request=request)
+        
+        print("Waiting for operation to complete...")
+        database = operation.result(OPERATION_TIMEOUT_SECONDS)
+
+        print(
+            "Created database {} on instance {}".format(
+                database.name,
+                database_admin_api.instance_path(spanner_client.project, instance_id),
+            )
+        )
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        raise e
+        
 print("Running python script...")
 
 print("\nCurrent directory:")
@@ -173,8 +178,7 @@ for line in new_lines:
 
 print("Starting the table creation...")
 
-instance_id = "demo-instance"
-database_id = "demo-database"
+
 
 # Call the create_database function
 create_database(instance_id, database_id, new_lines)
