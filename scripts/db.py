@@ -1,7 +1,11 @@
 import os
 import subprocess
 
-print("Running python script..")
+print("Running python script...")
+
+print(" current directory")
+result3 = subprocess.run(["pwd"], capture_output=True, text=True)
+print(result3.stdout)
 
 print("Listing files in current directory")
 result = subprocess.run(["ls", "-l"], capture_output=True, text=True)
@@ -10,7 +14,14 @@ print(result.stdout)
 print("Changing directory and Listing files in current directory")
 command_string = "cd .. && ls -l"
 result1 = subprocess.run(command_string, capture_output=True, text=True, shell=True)
+print(result1.stdout)
 
+print(" current directory")
+result4 = subprocess.run(["pwd"], capture_output=True, text=True)
+print(result3.stdout)
+
+
+print("Again Listing files in current directory")
 result2 = subprocess.run(["ls", "-l"], capture_output=True, text=True)
 print(result2.stdout)
 
