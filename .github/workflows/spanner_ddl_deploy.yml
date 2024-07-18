@@ -1,0 +1,54 @@
+name: Spanner DDL Deploy
+on:
+  workflow_dispatch:
+    inputs:
+      push_image:
+        description: 'push image'  
+        default: 'true'   
+        required: true
+
+      first_release:
+        description: 'first release'  
+        default: 'false'   
+        required: true
+        
+      previous_release_tag:
+        description: 'first release' 
+        default: 'test'    
+        required: true
+
+permissions:
+  id-token: write 
+  contents: read
+
+jobs:
+  spanner-ddl-deploy:
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    name: Deploy DDL
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+
+      - name: Authenticate with Google Cloud
+        uses: 'google-github-actions/auth@v2'
+        with:
+          service_account: ${{ secrets.SERVICE_ACCOUNT }}
+          workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10' 
+          
+      - name: Run Python
+        run: |
+           cd scripts
+           pip install -r requirements.txt
+           python create_spanner_db_tables.py
+          
+

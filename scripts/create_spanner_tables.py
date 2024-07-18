@@ -22,7 +22,7 @@ instance_id = "demo-instance"
 database_id = "demo-database"
 OPERATION_TIMEOUT_SECONDS = 240
 
-def create_database(instance_id, database_id, new_lines):
+def create_tables(instance_id, database_id, new_lines):
     """Creates a database and tables for sample data."""
     try:
         from google.cloud.spanner_admin_database_v1.types import spanner_database_admin

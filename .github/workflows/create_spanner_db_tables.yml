@@ -1,8 +1,21 @@
-name: Spanner DDL Deploy
+name: Spanner DB and DDL Deploy
 on:
-  push:
-   branches: 
-    - feature*
+  workflow_dispatch:
+    inputs:
+      db:
+        description: 'push image'  
+        default: 'true'   
+        required: true
+
+      first_release:
+        description: 'first release'  
+        default: 'false'   
+        required: true
+        
+      previous_release_tag:
+        description: 'first release' 
+        default: 'test'    
+        required: true
 
 permissions:
   id-token: write 
