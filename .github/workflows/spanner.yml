@@ -4,7 +4,9 @@ on:
    branches: 
     - feature*
 
-  workflow_dispatch:
+permissions:
+  id-token: write 
+  contents: read
 
 jobs:
   spanner-ddl-deploy:
