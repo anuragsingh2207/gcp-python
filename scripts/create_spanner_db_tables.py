@@ -1,3 +1,4 @@
+import os
 import subprocess
 import argparse
 import base64
@@ -13,18 +14,44 @@ from google.cloud.spanner_v1 import DirectedReadOptions, param_types
 from google.cloud.spanner_v1.data_types import JsonObject
 
 
-
 OPERATION_TIMEOUT_SECONDS = 240
 
+print("Running python script...")
 
-import subprocess
+print("Current directory:")
+result = subprocess.run(["pwd"], capture_output=True, text=True)
+print(result.stdout)
 
-print("Running python script..")
+print("Listing files in current directory")
+result = subprocess.run(["ls", "-l"], capture_output=True, text=True)
+print(result.stdout)
 
-# Get diff between the latest commit and current uncommitted changes
-result = subprocess.run(['git', 'diff', '--unified=0', 'HEAD', '../sql/db.sql'], stdout=subprocess.PIPE)
+print("Changing directory to 'sql' and staying there")
+os.chdir('../sql')
+
+print("Current directory after change:")
+result = subprocess.run(["pwd"], capture_output=True, text=True)
+print(result.stdout)
+
+print("Listing files in new current directory")
+result = subprocess.run(["ls", "-l"], capture_output=True, text=True)
+print(result.stdout)
+
+
+# Get diff between the latest commit and the previous commit
+print("Print newly added lines with special character...")
+result = subprocess.run(['git', 'diff', '--unified=0', 'HEAD^', 'db.sql'], stdout=subprocess.PIPE)
 diff_output = result.stdout.decode('utf-8')
 
+# Print the diff output
+print(diff_output)
+
+print("Listing files in new current directory")
+result = subprocess.run(["ls", "-l"], capture_output=True, text=True)
+print(result.stdout)
+
+
+print("Print newly added lines...")
 # Extract additions in the current uncommitted changes
 new_lines = [line[1:] for line in diff_output.splitlines() if line.startswith('+') and not line.startswith('+++')]
 
