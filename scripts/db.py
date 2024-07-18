@@ -23,11 +23,14 @@ result = subprocess.run(["ls", "-l"], capture_output=True, text=True)
 print(result.stdout)
 
 
-#Perform git diff
-result = subprocess.run(['git', 'diff', '--unified=0', 'HEAD', 'db.sql'], stdout=subprocess.PIPE)
+# Get diff between the latest commit and the previous commit
+result = subprocess.run(['git', 'diff', '--unified=0', 'HEAD^', 'db.sql'], stdout=subprocess.PIPE)
 diff_output = result.stdout.decode('utf-8')
 
+# Print the diff output
 print(diff_output)
+
+
 
 print("Listing files in new current directory")
 result = subprocess.run(["ls", "-l"], capture_output=True, text=True)
