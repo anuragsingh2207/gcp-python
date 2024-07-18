@@ -102,15 +102,18 @@ OPERATION_TIMEOUT_SECONDS = 240
 def create_database(instance_id, database_id, new_lines):
     """Creates a database and tables for sample data."""
     from google.cloud.spanner_admin_database_v1.types import spanner_database_admin
+    print("Imported library...")
 
     spanner_client = spanner.Client()
     database_admin_api = spanner_client.database_admin_api
+    print("Instantiated object for spanner client...")
 
     request = spanner_database_admin.CreateDatabaseRequest(
         parent=database_admin_api.instance_path(spanner_client.project, instance_id),
         create_statement=f"CREATE DATABASE `{database_id}`",
         extra_statements=new_lines
     )
+    print("Connection string configured...")
 
     operation = database_admin_api.create_database(request=request)
 
