@@ -18,7 +18,7 @@ OPERATION_TIMEOUT_SECONDS = 300
 
 from google.api_core.exceptions import AlreadyExists
 
-def update_tables(instance_id, database_id, new_lines):
+def create_tables(instance_id, database_id, new_lines):
     try:
         from google.cloud import spanner
         print("Imported library...")
