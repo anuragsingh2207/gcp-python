@@ -1,21 +1,26 @@
-name: Spanner DB and DDL Deploy
+name: Spanner DDL Deploy
 on:
   workflow_dispatch:
     inputs:
-      db:
-        description: 'push image'  
-        default: 'true'   
+      instnace:
+        type: choice
+        description: 'Select Instance'  
         required: true
+        default: 'demo-instance'
+        options:
+          - 'demo-instance'
+          - 'my-instance'
 
-      first_release:
-        description: 'first release'  
-        default: 'false'   
+      database:
+        type: choice
+        description: 'Select Database'  
         required: true
-        
-      previous_release_tag:
-        description: 'first release' 
-        default: 'test'    
-        required: true
+        default: 'demo-database'
+        options:
+          - 'demo-database'
+          - 'my-database'
+
+      
 
 permissions:
   id-token: write 
@@ -27,7 +32,7 @@ jobs:
       contents: 'read'
       id-token: 'write'
 
-    name: Deploy DDL
+    name: Deploy Spanner DDL
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -41,11 +46,12 @@ jobs:
           service_account: ${{ secrets.SERVICE_ACCOUNT }}
           workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
 
-      - uses: actions/setup-python@v5
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10' 
           
-      - name: Run Python
+      - name: Run Python Script to Create Tables
         run: |
            cd scripts
            pip install -r requirements.txt

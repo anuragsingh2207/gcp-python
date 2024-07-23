@@ -1,12 +1,7 @@
 import os
 import subprocess
-import argparse
-import base64
-import datetime
-import decimal
-import json
 import logging
-import time
+
 
 from google.cloud import spanner
 from google.cloud.spanner_admin_instance_v1.types import spanner_instance_admin
@@ -16,11 +11,10 @@ from google.cloud.spanner_v1.data_types import JsonObject
 
 GOOGLE_APPLICATION_CREDENTIALS=os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
-print("GAC:", GOOGLE_APPLICATION_CREDENTIALS)
 
 instance_id = "demo-instance"
 database_id = "demo-database"
-OPERATION_TIMEOUT_SECONDS = 240
+OPERATION_TIMEOUT_SECONDS = 300
 
 def create_tables(instance_id, database_id, new_lines):
     """Creates a database and tables for sample data."""
@@ -54,7 +48,6 @@ def create_tables(instance_id, database_id, new_lines):
         print(f"An error occurred: {e}")
         raise e
 
-print("Running python script...")
 
 print("\nCurrent directory:")
 result = subprocess.run(["pwd"], capture_output=True, text=True)
@@ -98,7 +91,6 @@ print("\nPrint newly added lines one at a time")
 for line in new_lines:
     print(line)
 
-print("Starting the table creation...")
 
 # Call the create_database function
-create_database(instance_id, database_id, new_lines)
+create_tables(instance_id, database_id, new_lines)
