@@ -55,6 +55,6 @@ jobs:
         run: |
            cd scripts
            pip install -r requirements.txt
-           python create_spanner_db_tables.py
+           python create_spanner_tables.py
           
 
