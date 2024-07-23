@@ -16,34 +16,28 @@ instance_id = "demo-instance"
 database_id = "demo-database"
 OPERATION_TIMEOUT_SECONDS = 300
 
-def create_tables(instance_id, database_id, new_lines):
-    """Creates a database and tables for sample data."""
+from google.api_core.exceptions import AlreadyExists
+
+def update_tables(instance_id, database_id, new_lines):
     try:
-        from google.cloud.spanner_admin_database_v1.types import spanner_database_admin
+        from google.cloud import spanner
         print("Imported library...")
-        
+
         spanner_client = spanner.Client()
-        database_admin_api = spanner_client.database_admin_api
-        print("Instantiated object for spanner client...")
+        instance = spanner_client.instance(instance_id)
 
-        request = spanner_database_admin.CreateDatabaseRequest(
-            parent=database_admin_api.instance_path(spanner_client.project, instance_id),
-            create_statement=f"CREATE DATABASE `{database_id}`",
-            extra_statements=new_lines
-        )
-        print("Connection string configured...")
+        database = instance.database(database_id)
+        print("Connected to database...")
 
-        operation = database_admin_api.create_database(request=request)
-        
+        operation = database.update_ddl(new_lines)
+        print("DDL statements execution started...")
+
         print("Waiting for operation to complete...")
-        database = operation.result(OPERATION_TIMEOUT_SECONDS)
+        operation.result()
 
-        print(
-            "Created database {} on instance {}".format(
-                database.name,
-                database_admin_api.instance_path(spanner_client.project, instance_id),
-            )
-        )
+        print("DDL statements execution completed")
+    except AlreadyExists as e:
+        print("Table already exists, no changes were made.")
     except Exception as e:
         print(f"An error occurred: {e}")
         raise e
