@@ -28,9 +28,11 @@ def create_tables(instance_id, database_id, new_lines):
         database_admin_api = spanner_client.database_admin_api
         print("Instantiated object for spanner client...")
 
-        request = spanner_database_admin.CreateDatabaseRequest(
-            parent=database_admin_api.instance_path(spanner_client.project, instance_id),
-            create_statement=new_lines
+        request = spanner_database_admin.UpdateDatabaseDdlRequest(
+            database=database_admin_api.database_path(
+                spanner_client.project, instance_id, database_id
+        ),
+        statements=new_lines
         )
         print("Connection string configured...")
 
