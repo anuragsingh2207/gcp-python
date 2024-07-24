@@ -79,7 +79,7 @@ def fetch_ddls():
     # result = subprocess.run(["ls", "-l"], capture_output=True, text=True)
     # print(result.stdout)
 
-    print("\Fetching & Printing newly added DDLs")
+    print("Fetching & Printing newly added DDLs...")
     # Extract additions in the current uncommitted changes
     new_lines = [line[1:] for line in diff_output.splitlines() if line.startswith('+') and not line.startswith('+++')]
 
