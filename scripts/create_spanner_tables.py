@@ -18,14 +18,11 @@ OPERATION_TIMEOUT_SECONDS = 300
 
 from google.api_core.exceptions import AlreadyExists
 
-def create_tables(instance_id, database_id, new_lines):
+def create_tables(instance_id, database_id, ddl):
     """Creates a database and tables for sample data."""
     try:
         from google.cloud.spanner_admin_database_v1.types import spanner_database_admin
         print("Imported library...")
-        
-        for line in new_lines:
-            print(line)
 
             spanner_client = spanner.Client()
             database_admin_api = spanner_client.database_admin_api
@@ -35,7 +32,7 @@ def create_tables(instance_id, database_id, new_lines):
                 database=database_admin_api.database_path(
                     spanner_client.project, instance_id, database_id
             ),
-            statements=line
+            statements=ddl
             )
             print("Connection string configured...")
 
@@ -45,7 +42,7 @@ def create_tables(instance_id, database_id, new_lines):
             database = operation.result(OPERATION_TIMEOUT_SECONDS)
 
             print(
-                "DDL statements execution completed database:{}  instance: {}".format(
+                "DDL statements execution completed Database: {} Instance: {}".format(
                     database.name,
                     database_admin_api.instance_path(spanner_client.project, instance_id),
                 )
@@ -98,4 +95,5 @@ for line in new_lines:
 
 
 # Call the create_database function
-create_tables(instance_id, database_id, new_lines)
+for line in new_lines:
+    create_tables(instance_id, database_id, line)
