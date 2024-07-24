@@ -51,22 +51,22 @@ def create_tables(instance_id, database_id, ddl):
 def fetch_ddls():
     os.chdir('../sql')
 
-    # Get diff between the latest commit and the previous commit
+    # Get diff between latest and previous commit
     result = subprocess.run(['git', 'diff', '--unified=0', 'HEAD^', 'db.sql'], stdout=subprocess.PIPE)
-    diff_output = result.stdout.decode('utf-8')
+    diff_output = result.stdout.decode('utf-'8)
 
     print("Fetching & Printing newly added DDLs...")
-    # Extract additions in the current uncommitted changes
-    new_lines = [line[1:] for line in diff_output.splitlines() if line.startswith('+') and not line.startswith('+++')]
-
+    
     # Combine the DDL statements into single lines
-    ddl_statements = '\n'.join(new_lines).split(';')
-    ddl_statements = [statement.strip().rstrip(";") for statement in ddl_statements if statement.strip()]
+    ddl_statements = [statement.strip() for statement in diff_output.split('"""\n') if statement.strip()]
 
     # Print the list of newly added lines
     for statement in ddl_statements:
         print(statement)
 
+    # remove the first three characters and last three characters which are `"""` from each DDL statement.
+    ddl_statements = [ddl[3:-3] for ddl in ddl_statements]
+    
     if ddl_statements:
         print("Starting execution of DDLs")
         create_tables(instance_id, database_id, ddl_statements)
