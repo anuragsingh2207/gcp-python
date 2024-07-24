@@ -21,22 +21,21 @@ from google.api_core.exceptions import AlreadyExists
 def create_tables(instance_id, database_id, ddl):
     """Creates a database and tables for sample data."""
     try:
-        from google.cloud.spanner_admin_database_v1.types import spanner_database_admin
-        print("Imported library...")
+        from google.cloud.spanner_admin_database_v1.types import \
+        spanner_database_admin
 
         spanner_client = spanner.Client()
         database_admin_api = spanner_client.database_admin_api
-        print("Instantiated object for spanner client...")
 
         request = spanner_database_admin.UpdateDatabaseDdlRequest(
-            database=database_admin_api.database_path(
-                spanner_client.project, instance_id, database_id
+        database=database_admin_api.database_path(
+            spanner_client.project, instance_id, database_id
         ),
-        statements=ddl
+        statements=ddl,
         )
         print("Connection string configured...")
 
-        operation = database_admin_api.create_database(request=request)
+        operation = database_admin_api.update_database_ddl(request=request)
             
         print("Waiting for operation to complete...")
         database = operation.result(OPERATION_TIMEOUT_SECONDS)
