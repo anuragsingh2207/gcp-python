@@ -60,7 +60,7 @@ def fetch_ddls():
     new_lines = [line[1:] for line in diff_output.splitlines() if line.startswith('+') and not line.startswith('+++')]
 
     # Combine the DDL statements into single lines
-    ddl_statements = '\n'.join(new_lines).split(';\n')
+    ddl_statements = '\n'.join(new_lines).split(';')
     ddl_statements = [statement.strip().rstrip(";") for statement in ddl_statements if statement.strip()]
 
     # Print the list of newly added lines
