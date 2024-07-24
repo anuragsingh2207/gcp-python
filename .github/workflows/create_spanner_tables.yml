@@ -1,24 +1,28 @@
 name: Spanner DDL Deploy
 on:
-  workflow_dispatch:
-    inputs:
-      instnace:
-        type: choice
-        description: 'Select Instance'  
-        required: true
-        default: 'demo-instance'
-        options:
-          - 'demo-instance'
-          - 'my-instance'
+  push:
+    branches: develop
+  # workflow_dispatch:
+  #   inputs:
+  #     instnace:
+  #       type: choice
+  #       description: 'Select Instance'  
+  #       required: true
+  #       default: 'demo-instance'
+  #       options:
+  #         - 'demo-instance'
+  #         - 'my-instance'
 
-      database:
-        type: choice
-        description: 'Select Database'  
-        required: true
-        default: 'demo-database'
-        options:
-          - 'demo-database'
-          - 'my-database'
+  #     database:
+  #       type: choice
+  #       description: 'Select Database'  
+  #       required: true
+  #       default: 'demo-database'
+  #       options:
+  #         - 'demo-database'
+  #         - 'my-database'
+
+
 
       
 
