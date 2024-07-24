@@ -48,49 +48,48 @@ def create_tables(instance_id, database_id, ddl):
         print(f"An error occurred: {e}")
         raise e
 
-# print("\nCurrent directory:")
-# result = subprocess.run(["pwd"], capture_output=True, text=True)
-# print(result.stdout)
+def fetch_ddls():
+    # print("\nCurrent directory:")
+    # result = subprocess.run(["pwd"], capture_output=True, text=True)
+    # print(result.stdout)
 
-# print("\nListing files in current directory")
-# result = subprocess.run(["ls", "-l"], capture_output=True, text=True)
-# print(result.stdout)
+    # print("\nListing files in current directory")
+    # result = subprocess.run(["ls", "-l"], capture_output=True, text=True)
+    # print(result.stdout)
 
-# print("\nChanging directory to 'sql' and staying there")
-os.chdir('../sql')
+    # print("\nChanging directory to 'sql' and staying there")
+    os.chdir('../sql')
 
-# print("\nCurrent directory after change:")
-# result = subprocess.run(["pwd"], capture_output=True, text=True)
-# print(result.stdout)
+    # print("\nCurrent directory after change:")
+    # result = subprocess.run(["pwd"], capture_output=True, text=True)
+    # print(result.stdout)
 
-print("\nListing files in new current directory")
-result = subprocess.run(["ls", "-l"], capture_output=True, text=True)
-print(result.stdout)
+    # print("\nListing files in new current directory")
+    # result = subprocess.run(["ls", "-l"], capture_output=True, text=True)
+    # print(result.stdout)
 
-# Get diff between the latest commit and the previous commit
-result = subprocess.run(['git', 'diff', '--unified=0', 'HEAD^', 'db.sql'], stdout=subprocess.PIPE)
-diff_output = result.stdout.decode('utf-8')
+    # Get diff between the latest commit and the previous commit
+    result = subprocess.run(['git', 'diff', '--unified=0', 'HEAD^', 'db.sql'], stdout=subprocess.PIPE)
+    diff_output = result.stdout.decode('utf-8')
 
-# Print the diff output
-# print(diff_output)
+    # Print the diff output
+    # print(diff_output)
 
-# print("\nListing files in new current directory")
-# result = subprocess.run(["ls", "-l"], capture_output=True, text=True)
-# print(result.stdout)
+    # print("\nListing files in new current directory")
+    # result = subprocess.run(["ls", "-l"], capture_output=True, text=True)
+    # print(result.stdout)
 
-print("\nPrint newly added lines...")
-# Extract additions in the current uncommitted changes
-new_lines = [line[1:] for line in diff_output.splitlines() if line.startswith('+') and not line.startswith('+++')]
+    print("\Fetching newly added DDLs one at a time")
+    # Extract additions in the current uncommitted changes
+    new_lines = [line[1:] for line in diff_output.splitlines() if line.startswith('+') and not line.startswith('+++')]
 
-print(new_lines )
-
-# print("\nPrint newly added lines one at a time")
-# # Print the list of newly added lines
-# for line in new_lines:
-#     print(line)
+    # Print the list of newly added lines
+    for line in new_lines:
+        print(line)
+    return new_lines
 
 
 if new_lines:
-    create_tables(instance_id, database_id, new_lines)
+    create_tables(instance_id, database_id, fetch_ddls())
 else:
     print("No new lines provided, stopping execution.")
