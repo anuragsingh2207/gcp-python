@@ -24,29 +24,28 @@ def create_tables(instance_id, database_id, ddl):
         from google.cloud.spanner_admin_database_v1.types import spanner_database_admin
         print("Imported library...")
 
-            spanner_client = spanner.Client()
-            database_admin_api = spanner_client.database_admin_api
-            print("Instantiated object for spanner client...")
+        spanner_client = spanner.Client()
+        database_admin_api = spanner_client.database_admin_api
+        print("Instantiated object for spanner client...")
 
-            request = spanner_database_admin.UpdateDatabaseDdlRequest(
-                database=database_admin_api.database_path(
-                    spanner_client.project, instance_id, database_id
-            ),
-            statements=ddl
-            )
-            print("Connection string configured...")
+        request = spanner_database_admin.UpdateDatabaseDdlRequest(
+            database=database_admin_api.database_path(
+                spanner_client.project, instance_id, database_id
+        ),
+        statements=ddl
+        )
+        print("Connection string configured...")
 
-            operation = database_admin_api.create_database(request=request)
+        operation = database_admin_api.create_database(request=request)
             
-            print("Waiting for operation to complete...")
-            database = operation.result(OPERATION_TIMEOUT_SECONDS)
+        print("Waiting for operation to complete...")
+        database = operation.result(OPERATION_TIMEOUT_SECONDS)
 
-            print(
-                "DDL statements execution completed Database: {} Instance: {}".format(
-                    database.name,
-                    database_admin_api.instance_path(spanner_client.project, instance_id),
-                )
+        print("DDL statements execution completed Database: {} Instance: {}".format(
+                database.name,
+                database_admin_api.instance_path(spanner_client.project, instance_id),
             )
+        )
     except Exception as e:
         print(f"An error occurred: {e}")
         raise e
