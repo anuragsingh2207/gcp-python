@@ -53,7 +53,7 @@ def fetch_ddls():
 
     # Get diff between latest and previous commit
     result = subprocess.run(['git', 'diff', '--unified=0', 'HEAD^', 'db.sql'], stdout=subprocess.PIPE)
-    diff_output = result.stdout.decode('utf-'8)
+    diff_output = result.stdout.decode('utf-8')
 
     print("Fetching & Printing newly added DDLs...")
     
