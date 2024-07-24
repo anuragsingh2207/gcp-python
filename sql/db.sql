@@ -7,3 +7,10 @@ CREATE TABLE Singers (
                 ARRAY_TO_STRING([FirstName, LastName], " ")
             ) STORED
         ) PRIMARY KEY (SingerId);
+
+CREATE TABLE Albums (
+            SingerId     INT64 NOT NULL,
+            AlbumId      INT64 NOT NULL,
+            AlbumTitle   STRING(MAX)
+        ) PRIMARY KEY (SingerId, AlbumId),
+        INTERLEAVE IN PARENT Singers ON DELETE CASCADE;
