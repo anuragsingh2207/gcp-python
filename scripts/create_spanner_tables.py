@@ -31,7 +31,18 @@ def create_tables(instance_id, database_id, ddl):
         database=database_admin_api.database_path(
             spanner_client.project, instance_id, database_id
         ),
-        statements=[ """CREATE TABLE Albums (
+        statements=[ 
+            """CREATE TABLE Singers (
+            SingerId     INT64 NOT NULL,
+            FirstName    STRING(1024),
+            LastName     STRING(1024),
+            SingerInfo   BYTES(MAX),
+            FullName   STRING(2048) AS (
+                ARRAY_TO_STRING([FirstName, LastName], " ")
+            ) STORED
+        ) PRIMARY KEY (SingerId)""",
+
+            """CREATE TABLE Albums (
             SingerId     INT64 NOT NULL,
             AlbumId      INT64 NOT NULL,
             AlbumTitle   STRING(MAX)
