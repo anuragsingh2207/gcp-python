@@ -79,7 +79,7 @@ def fetch_ddls():
     # result = subprocess.run(["ls", "-l"], capture_output=True, text=True)
     # print(result.stdout)
 
-    print("\Fetching & Printing newly added DDLs one at a time")
+    print("\Fetching & Printing newly added DDLs")
     # Extract additions in the current uncommitted changes
     new_lines = [line[1:] for line in diff_output.splitlines() if line.startswith('+') and not line.startswith('+++')]
 
@@ -88,8 +88,13 @@ def fetch_ddls():
         print(line)
 
     if new_lines:
-    create_tables(instance_id, database_id, new_lines)
+        print("Starting execution of DDLs")
+        create_tables(instance_id, database_id, new_lines)
     else:
-    print("No new lines provided, stopping execution.")
+        print("No new lines provided, stopping execution.")
 
+def main():
+    fetch_ddls()
 
+if __name__ == "__main__":
+    main()
