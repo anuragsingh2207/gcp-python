@@ -49,50 +49,30 @@ def create_tables(instance_id, database_id, ddl):
         raise e
 
 def fetch_ddls():
-    # print("\nCurrent directory:")
-    # result = subprocess.run(["pwd"], capture_output=True, text=True)
-    # print(result.stdout)
-
-    # print("\nListing files in current directory")
-    # result = subprocess.run(["ls", "-l"], capture_output=True, text=True)
-    # print(result.stdout)
-
-    # print("\nChanging directory to 'sql' and staying there")
     os.chdir('../sql')
-
-    # print("\nCurrent directory after change:")
-    # result = subprocess.run(["pwd"], capture_output=True, text=True)
-    # print(result.stdout)
-
-    # print("\nListing files in new current directory")
-    # result = subprocess.run(["ls", "-l"], capture_output=True, text=True)
-    # print(result.stdout)
 
     # Get diff between the latest commit and the previous commit
     result = subprocess.run(['git', 'diff', '--unified=0', 'HEAD^', 'db.sql'], stdout=subprocess.PIPE)
     diff_output = result.stdout.decode('utf-8')
 
-    # Print the diff output
-    # print(diff_output)
-
-    # print("\nListing files in new current directory")
-    # result = subprocess.run(["ls", "-l"], capture_output=True, text=True)
-    # print(result.stdout)
-
     print("Fetching & Printing newly added DDLs...")
     # Extract additions in the current uncommitted changes
     new_lines = [line[1:] for line in diff_output.splitlines() if line.startswith('+') and not line.startswith('+++')]
 
-    # Print the list of newly added lines
-    for line in new_lines:
-        print(line)
+    # Combine the DDL statements into single lines
+    ddl_statements = '\n'.join(new_lines).split(';\n')
+    ddl_statements = [statement.strip() for statement in ddl_statements if statement.strip()]
 
-    if new_lines:
+    # Print the list of newly added lines
+    for statement in ddl_statements:
+        print(statement)
+
+    if ddl_statements:
         print("Starting execution of DDLs")
-        create_tables(instance_id, database_id, new_lines)
+        create_tables(instance_id, database_id, ddl_statements)
     else:
         print("No new lines provided, stopping execution.")
-
+        
 def main():
     fetch_ddls()
 
