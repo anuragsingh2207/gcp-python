@@ -92,5 +92,5 @@ for line in new_lines:
 
 
 # Call the create_database function
-for line in new_lines:
-    create_tables(instance_id, database_id, line)
+# for line in new_lines:
+create_tables(instance_id, database_id, new_lines)
