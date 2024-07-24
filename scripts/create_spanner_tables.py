@@ -31,18 +31,17 @@ def create_tables(instance_id, database_id, ddl):
         database=database_admin_api.database_path(
             spanner_client.project, instance_id, database_id
         ),
-        statements=ddl,
+        statements=ddl
         )
         print("Connection string configured...")
 
-        operation = database_admin_api.update_database_ddl(request=request)
+        operation = database_admin_api.update_database_ddl(request)
             
         print("Waiting for operation to complete...")
         database = operation.result(OPERATION_TIMEOUT_SECONDS)
 
-        print("DDL statements execution completed Database: {} Instance: {}".format(
-                database.name,
-                database_admin_api.instance_path(spanner_client.project, instance_id),
+        print("Executed DDLs on database {} on instance {}".format(
+            database_id, instance_id
             )
         )
     except Exception as e:
