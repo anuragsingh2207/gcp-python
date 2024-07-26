@@ -69,3 +69,22 @@ CREATE TABLE Albums3 (
     AlbumTitle   STRING(MAX)
 ) PRIMARY KEY (SingerId, AlbumId)
 ;
+
+
+CREATE TABLE Singers4 (
+    SingerId     INT64 NOT NULL,
+    FirstName    STRING(1024),
+    LastName     STRING(1024),
+    SingerInfo   BYTES(MAX),
+    FullName     STRING(2048) AS (
+        ARRAY_TO_STRING([FirstName, LastName], " ")
+    ) STORED
+) PRIMARY KEY (SingerId)
+;
+
+CREATE TABLE Albums4 (
+    SingerId     INT64 NOT NULL,
+    AlbumId      INT64 NOT NULL,
+    AlbumTitle   STRING(MAX)
+) PRIMARY KEY (SingerId, AlbumId)
+;

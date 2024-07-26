@@ -52,8 +52,8 @@ def create_tables(instance_id, database_id, ddl):
 
 
 def get_new_sql_lines(path_to_sql_file):
-    # Get added lines using git diff
-    diff_output = subprocess.check_output(["git", "diff", "HEAD", path_to_sql_file]).decode()
+    # Get added lines in last commit using git diff
+    diff_output = subprocess.check_output(["git", "diff", "HEAD~1", "HEAD", path_to_sql_file]).decode()
 
     new_lines = []
 
@@ -62,7 +62,7 @@ def get_new_sql_lines(path_to_sql_file):
         if line.startswith('+ '):
             # Append line to new_lines without the '+ '
             new_lines.append(line[2:])
-            
+
     # Join new lines together into a single string, and return
     return ''.join(new_lines)
 
