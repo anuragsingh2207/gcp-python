@@ -52,24 +52,17 @@ def create_tables(instance_id, database_id, ddl):
 
 
 def get_new_sql_lines(path_to_sql_file):
-    # Get previous version of file
-    previous_version = subprocess.check_output(["git", "show", "HEAD:"+path_to_sql_file]).decode().split('\n')
-
-    # Get current version of file
-    with open(path_to_sql_file, "r") as file:
-        current_version = file.readlines()
-
-    d = difflib.Differ()
-    diff = d.compare(previous_version, current_version)
+    # Get added lines using git diff
+    diff_output = subprocess.check_output(["git", "diff", "HEAD", path_to_sql_file]).decode()
 
     new_lines = []
 
     # Extract new lines from diff
-    for line in diff:
+    for line in diff_output.split('\n'):
         if line.startswith('+ '):
             # Append line to new_lines without the '+ '
             new_lines.append(line[2:])
-
+            
     # Join new lines together into a single string, and return
     return ''.join(new_lines)
 
