@@ -73,46 +73,21 @@ def get_new_sql_lines(path_to_sql_file):
     # Join new lines together into a single string with '\n' separating each line, and return
     return '\n'.join(new_lines)
 
-
-# def fetch_ddls():
-#     os.chdir('../sql')
-
-#     # Get diff between latest and previous commit
-#     result = subprocess.run(['git', 'diff', '--unified=0', 'HEAD^'], stdout=subprocess.PIPE)
-#     diff_output = result.stdout.decode('utf-8')
-
-#     print("Fetching & Printing newly added DDLs...")
-
-#     # Use regex to find all blocks of "+", which represent added lines
-#     added_blocks = re.findall(r'\+[\s\S]+?(?=\n@@|$)', diff_output)
-
-#     # For each block of added lines, extract any SQL statements that start with """
-#     new_ddl_statements = [re.findall(r'''\"\"\"[^\"]+\"\"\"''', block) for block in added_blocks]
-#     new_ddl_statements = [stmt for sublist in new_ddl_statements for stmt in sublist] # flatten the list
-
-#     # Stripping the triple quotes from the SQL statements
-#     new_ddl_statements = [stmt.replace('''\"\"\"''', '').strip() for stmt in new_ddl_statements]
-
-#     for statement in new_ddl_statements:
-#         # Print the list of newly added lines
-#         print(statement)
-
-#     if new_ddl_statements:
-#         print("Starting execution of DDLs")
-#         for statement in new_ddl_statements:
-#             create_tables(instance_id, database_id, statement)
-#     else:
-#         print("No new lines provided, stopping execution.")
-
-
 def main():
     os.chdir('../sql')
     new_sql_commands = get_new_sql_lines("./db.sql")
     if new_sql_commands:
         print("Printing newly added sql lines ...")
-        print(new_sql_commands)
+        
+        # split the commands into a list and append " ;" to the end of each command
+        ddl_statements = [
+            (statement + " ;").replace('"""', '').strip() for statement in new_sql_commands.split('""","""')
+        ]
+        
+        print(ddl_statements)
+        
         print("Starting execution of DDLs")
-        create_tables(instance_id, database_id, new_sql_commands)
+        create_tables(instance_id, database_id, ddl_statements)
     else:
         print("No new lines provided, stopping execution.")
      
