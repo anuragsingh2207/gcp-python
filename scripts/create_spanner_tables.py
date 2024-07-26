@@ -1,6 +1,7 @@
 import os
 import subprocess
 import logging
+import re
 
 
 from google.cloud import spanner
@@ -58,20 +59,18 @@ def fetch_ddls():
     print("Fetching & Printing newly added DDLs...")
     
     # Combine the DDL statements into single lines
-    ddl_statements = [statement.strip() for statement in diff_output.split('"""\n') if statement.strip()]
+    ddl_statements = [statement.strip() for statement in re.findall(r'"""\s*(.*?)\s*"""', diff_output, re.S)]
 
     # Print the list of newly added lines
     for statement in ddl_statements:
         print(statement)
 
-    # remove the first three characters and last three characters which are `"""` from each DDL statement.
-    ddl_statements = [ddl[3:-3] for ddl in ddl_statements]
-    
     if ddl_statements:
         print("Starting execution of DDLs")
         create_tables(instance_id, database_id, ddl_statements)
     else:
         print("No new lines provided, stopping execution.")
+
 
 def main():
     fetch_ddls()
