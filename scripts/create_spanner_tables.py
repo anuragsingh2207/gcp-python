@@ -66,7 +66,7 @@ def fetch_ddls():
         print(statement)
 
     # remove the first three characters and last three characters which are `"""` from each DDL statement.
-    ddl_statements = [ddl[3:-3] for ddl in ddl_statements]
+    # ddl_statements = [ddl[3:-3] for ddl in ddl_statements]
     
     if ddl_statements:
         print("Starting execution of DDLs")
