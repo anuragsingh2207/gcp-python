@@ -110,9 +110,9 @@ def main():
     new_sql_commands = get_new_sql_lines("./db.sql")
     if new_sql_commands:
         print("Printing newly added sql lines ...")
-        #print("Starting execution of DDLs")
         print(new_sql_commands)
-        #create_tables(instance_id, database_id, statement)
+        print("Starting execution of DDLs")
+        create_tables(instance_id, database_id, new_sql_commands)
     else:
         print("No new lines provided, stopping execution.")
      
