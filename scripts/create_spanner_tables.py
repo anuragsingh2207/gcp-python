@@ -61,15 +61,16 @@ def fetch_ddls():
     # Combine the DDL statements into single lines
     ddl_statements = [statement.strip() for statement in diff_output.split('''"\''\n''') if statement.strip().startswith('CREATE')]
 
-    # Print the list of newly added lines
-    for statement in ddl_statements:
-        print(statement)
-
-    # if ddl_statements:
-    #     print("Starting execution of DDLs")
-    #     create_tables(instance_id, database_id, ddl_statements)
-    # else:
-    #     print("No new lines provided, stopping execution.")
+ 
+    
+    if ddl_statements:
+        print("Starting execution of DDLs")
+        for statement in ddl_statements:
+        # Print the list of newly added lines
+            print(statement)
+            create_tables(instance_id, database_id, statement)
+    else:
+        print("No new lines provided, stopping execution.")
 
 
 def main():
