@@ -57,16 +57,20 @@ def get_new_sql_lines(path_to_sql_file):
         ["git", "diff", "-U0", "HEAD~1", path_to_sql_file]
     ).decode()
 
-    new_lines = []
+    sql_commands = []
+    sql_command = ""
 
-    # Extract new lines from diff
+    # Extract new SQL lines from diff
     for line in diff_output.split('\n'):
         if line.startswith('+') and not line.startswith('+++'):
-            # Append line to new_lines without the '+'
-            new_lines.append(line[1:].strip())  
+            # Append line to command without the '+'
+            sql_command += ' ' + line[1:].strip()
+            if line.strip().endswith(')'):
+                # End of command. Append to list.
+                sql_commands.append(sql_command.strip())
+                sql_command = ""
 
-    # Join and return new lines
-    return ';\n'.join(new_lines)
+    return sql_commands
 
 
 def main():
@@ -74,13 +78,10 @@ def main():
     new_sql_commands = get_new_sql_lines("./db.sql")
     if new_sql_commands:
         print("Printing newly added sql lines ...")
-        
-        # Split the commands into a list of DDL statements
-        ddl_statements = new_sql_commands.split(';')[:-1]  # Discard the last split as it will be an empty string
+        print(new_sql_commands)
 
-        print(ddl_statements)
         print("Starting execution of DDLs")
-        create_tables(instance_id, database_id, ddl_statements)
+        create_tables(instance_id, database_id, new_sql_commands)
     else:
         print("No new lines provided, stopping execution.")
     
