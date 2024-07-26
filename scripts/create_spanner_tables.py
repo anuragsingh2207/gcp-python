@@ -59,7 +59,7 @@ def fetch_ddls():
     print("Fetching & Printing newly added DDLs...")
     
     # Combine the DDL statements into single lines
-    ddl_statements = [statement.strip() for statement in re.findall(r'"""\s*(.*?)\s*"""', diff_output, re.S)]
+    ddl_statements = [statement for statement in re.findall(r'"""\s*(.*?)\s*"""', diff_output, re.DOTALL)]
 
     # Print the list of newly added lines
     for statement in ddl_statements:
@@ -67,6 +67,7 @@ def fetch_ddls():
 
     if ddl_statements:
         print("Starting execution of DDLs")
+        # supposed your instance_id and database_id are defined somewhere
         create_tables(instance_id, database_id, ddl_statements)
     else:
         print("No new lines provided, stopping execution.")
