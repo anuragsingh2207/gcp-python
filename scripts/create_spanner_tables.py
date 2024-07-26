@@ -52,26 +52,21 @@ def create_tables(instance_id, database_id, ddl):
 
 
 def get_new_sql_lines(path_to_sql_file):
-    # Get previous version of file
-    previous_version = subprocess.check_output(["git", "show", "HEAD:"+path_to_sql_file]).decode().split('\n')
-
-    # Get current version of file
-    with open(path_to_sql_file, "r") as file:
-        current_version = file.readlines()
-
-    d = difflib.Differ()
-    diff = d.compare(previous_version, current_version)
+    # Get unified diff for added lines
+    diff_output = subprocess.check_output(
+        ["git", "diff", "-U0", "HEAD~1", path_to_sql_file]
+    ).decode()
 
     new_lines = []
 
     # Extract new lines from diff
-    for line in diff:
-        if line.startswith('+ '):
-            # Append line to new_lines without the '+ '
-            new_lines.append(line[2:])
+    for line in diff_output.split('\n'):
+        if line.startswith('+') and not line.startswith('+++'):
+            # Append line to new_lines without the '+'
+            new_lines.append(line[1:].strip())  
 
-    # Join new lines together into a single string, and return
-    return ''.join(new_lines)
+    # Join and return new lines
+    return ';\n'.join(new_lines)
 
 
 def main():
@@ -85,7 +80,7 @@ def main():
 
         print(ddl_statements)
         print("Starting execution of DDLs")
-        create_tables(instance_id, database_id, ddl_statements)
+        #create_tables(instance_id, database_id, ddl_statements)
     else:
         print("No new lines provided, stopping execution.")
     
