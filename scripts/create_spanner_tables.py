@@ -67,11 +67,12 @@ def get_new_sql_lines(path_to_sql_file):
     # Extract new lines from diff
     for line in diff:
         if line.startswith('+ '):
-            # Append line to new_lines without the '+ ' and the trailing newline
-            new_lines.append(line[2:].rstrip('\n'))
+            # Append line to new_lines without the '+ '
+            new_lines.append(line[2:])
 
-    # Join new lines together into a single string with '\n' separating each line, and return
-    return '\n'.join(new_lines)
+    # Join new lines together into a single string, and return
+    return ''.join(new_lines)
+
 
 def main():
     os.chdir('../sql')
@@ -79,18 +80,14 @@ def main():
     if new_sql_commands:
         print("Printing newly added sql lines ...")
         
-        # split the commands into a list and append " ;" to the end of each command
-        ddl_statements = [
-            (statement + " ;").replace('"""', '').strip() for statement in new_sql_commands.split('""","""')
-        ]
-        
+        # Split the commands into a list of DDL statements
+        ddl_statements = new_sql_commands.split(';')[:-1]  # Discard the last split as it will be an empty string
+
         print(ddl_statements)
-        
         print("Starting execution of DDLs")
         create_tables(instance_id, database_id, ddl_statements)
     else:
         print("No new lines provided, stopping execution.")
-     
     
 
 if __name__ == "__main__":
