@@ -59,15 +59,17 @@ def fetch_ddls():
     print("Fetching & Printing newly added DDLs...")
     
     # Combine the DDL statements into single lines
-    ddl_statements = [statement for statement in re.findall(r'"""\s*(.*?)\s*"""', diff_output, re.DOTALL)]
+    ddl_statements = [statement.strip() for statement in diff_output.split('"""\n') if statement.strip()]
 
     # Print the list of newly added lines
     for statement in ddl_statements:
         print(statement)
 
+    # remove the first three characters and last three characters which are `"""` from each DDL statement.
+    ddl_statements = [ddl[3:-3] for ddl in ddl_statements]
+    
     if ddl_statements:
         print("Starting execution of DDLs")
-        # supposed your instance_id and database_id are defined somewhere
         create_tables(instance_id, database_id, ddl_statements)
     else:
         print("No new lines provided, stopping execution.")
