@@ -65,10 +65,15 @@ def get_new_sql_lines(path_to_sql_file):
         if line.startswith('+') and not line.startswith('+++'):
             # Append line to command without the '+'
             sql_command += ' ' + line[1:].strip()
-            if line.strip().endswith(')'):
+
+            if line.strip().endswith(';'):
                 # End of command. Append to list.
                 sql_commands.append(sql_command.strip())
-                sql_command = ""
+                sql_command = ""  
+            
+    # If there was no semicolon at the end of the last command append it
+    if sql_command:
+        sql_commands.append(sql_command.strip())
 
     return sql_commands
 
