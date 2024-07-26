@@ -80,7 +80,7 @@ def main():
 
         print(ddl_statements)
         print("Starting execution of DDLs")
-        #create_tables(instance_id, database_id, ddl_statements)
+        create_tables(instance_id, database_id, ddl_statements)
     else:
         print("No new lines provided, stopping execution.")
     
