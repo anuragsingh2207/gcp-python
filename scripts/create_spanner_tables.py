@@ -62,11 +62,10 @@ def fetch_ddls():
     ddl_statements = [statement.strip() for statement in diff_output.split('"""\n') if statement.strip()]
 
     # Print the list of newly added lines
-    for statement in ddl_statements:
-        print(statement)
+    #for statement in ddl_statements:
+    #    print(statement)
 
-    # remove the first three characters and last three characters which are `"""` from each DDL statement.
-    # ddl_statements = [ddl[3:-3] for ddl in ddl_statements]
+    print(ddl_statements)
     
     if ddl_statements:
         print("Starting execution of DDLs")
