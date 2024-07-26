@@ -2,6 +2,7 @@ import os
 import subprocess
 import logging
 import re
+import difflib
 
 
 from google.cloud import spanner
@@ -49,39 +50,73 @@ def create_tables(instance_id, database_id, ddl):
         print(f"An error occurred: {e}")
         raise e
 
-def fetch_ddls():
-    os.chdir('../sql')
 
-    # Get diff between latest and previous commit
-    result = subprocess.run(['git', 'diff', '--unified=0', 'HEAD^'], stdout=subprocess.PIPE)
-    diff_output = result.stdout.decode('utf-8')
+def get_new_sql_lines(path_to_sql_file):
+    # Get previous version of file
+    previous_version = subprocess.check_output(["git", "show", "HEAD:"+path_to_sql_file]).decode().split('\n')
 
-    print("Fetching & Printing newly added DDLs...")
+    # Get current version of file
+    with open(path_to_sql_file, "r") as file:
+        current_version = file.readlines()
 
-    # Use regex to find all blocks of "+", which represent added lines
-    added_blocks = re.findall(r'\+[\s\S]+?(?=\n@@|$)', diff_output)
+    d = difflib.Differ()
+    diff = d.compare(previous_version, current_version)
 
-    # For each block of added lines, extract any SQL statements that start with """
-    new_ddl_statements = [re.findall(r'''\"\"\"[^\"]+\"\"\"''', block) for block in added_blocks]
-    new_ddl_statements = [stmt for sublist in new_ddl_statements for stmt in sublist] # flatten the list
+    new_lines = []
 
-    # Stripping the triple quotes from the SQL statements
-    new_ddl_statements = [stmt.replace('''\"\"\"''', '').strip() for stmt in new_ddl_statements]
+    # Extract new lines from diff
+    for line in diff:
+        if line.startswith('+ '):
+            # Append line to new_lines without the '+ ' and the trailing newline
+            new_lines.append(line[2:].rstrip('\n'))
 
-    for statement in new_ddl_statements:
-        # Print the list of newly added lines
-        print(statement)
+    # Join new lines together into a single string with '\n' separating each line, and return
+    return '\n'.join(new_lines)
 
-    if new_ddl_statements:
-        print("Starting execution of DDLs")
-        for statement in new_ddl_statements:
-            create_tables(instance_id, database_id, statement)
-    else:
-        print("No new lines provided, stopping execution.")
+
+# def fetch_ddls():
+#     os.chdir('../sql')
+
+#     # Get diff between latest and previous commit
+#     result = subprocess.run(['git', 'diff', '--unified=0', 'HEAD^'], stdout=subprocess.PIPE)
+#     diff_output = result.stdout.decode('utf-8')
+
+#     print("Fetching & Printing newly added DDLs...")
+
+#     # Use regex to find all blocks of "+", which represent added lines
+#     added_blocks = re.findall(r'\+[\s\S]+?(?=\n@@|$)', diff_output)
+
+#     # For each block of added lines, extract any SQL statements that start with """
+#     new_ddl_statements = [re.findall(r'''\"\"\"[^\"]+\"\"\"''', block) for block in added_blocks]
+#     new_ddl_statements = [stmt for sublist in new_ddl_statements for stmt in sublist] # flatten the list
+
+#     # Stripping the triple quotes from the SQL statements
+#     new_ddl_statements = [stmt.replace('''\"\"\"''', '').strip() for stmt in new_ddl_statements]
+
+#     for statement in new_ddl_statements:
+#         # Print the list of newly added lines
+#         print(statement)
+
+#     if new_ddl_statements:
+#         print("Starting execution of DDLs")
+#         for statement in new_ddl_statements:
+#             create_tables(instance_id, database_id, statement)
+#     else:
+#         print("No new lines provided, stopping execution.")
 
 
 def main():
-    fetch_ddls()
+    os.chdir('../sql')
+    new_sql_commands = get_new_sql_lines("./db.sql")
+    if new_sql_commands:
+        print("Printing newly added sql lines ...")
+        #print("Starting execution of DDLs")
+        print(new_sql_commands)
+        #create_tables(instance_id, database_id, statement)
+    else:
+        print("No new lines provided, stopping execution.")
+     
+    
 
 if __name__ == "__main__":
     main()
