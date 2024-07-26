@@ -53,25 +53,23 @@ def fetch_ddls():
     os.chdir('../sql')
 
     # Get diff between latest and previous commit
-    result = subprocess.run(['git', 'diff', '--unified=0', 'HEAD^', 'db.sql'], stdout=subprocess.PIPE)
+    result = subprocess.run(['git', 'diff', '--unified=0', 'HEAD^'], stdout=subprocess.PIPE)
     diff_output = result.stdout.decode('utf-8')
 
     print("Fetching & Printing newly added DDLs...")
     
     # Combine the DDL statements into single lines
-    ddl_statements = [statement.strip() for statement in diff_output.split('"""\n') if statement.strip()]
+    ddl_statements = [statement.strip() for statement in diff_output.split('''"\''\n''') if statement.strip().startswith('CREATE')]
 
     # Print the list of newly added lines
-    #for statement in ddl_statements:
-    #    print(statement)
+    for statement in ddl_statements:
+        print(statement)
 
-    print(ddl_statements)
-    
-    if ddl_statements:
-        print("Starting execution of DDLs")
-        create_tables(instance_id, database_id, ddl_statements)
-    else:
-        print("No new lines provided, stopping execution.")
+    # if ddl_statements:
+    #     print("Starting execution of DDLs")
+    #     create_tables(instance_id, database_id, ddl_statements)
+    # else:
+    #     print("No new lines provided, stopping execution.")
 
 
 def main():
