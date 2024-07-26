@@ -57,18 +57,22 @@ def fetch_ddls():
     diff_output = result.stdout.decode('utf-8')
 
     print("Fetching & Printing newly added DDLs...")
-    
-    # Combine the DDL statements into single lines
-    ddl_statements = [statement.strip() for statement in diff_output.split('''"\''\n''') if statement.strip().startswith('CREATE')]
 
- 
-    
-    if ddl_statements:
-        print("Starting execution of DDLs")
-        for statement in ddl_statements:
+    # Combine the DDL statements into single lines
+    ddl_statements = [statement.strip() for statement in diff_output.split('\n') if statement.strip().startswith('CREATE')]
+
+    # Filter out only newly added lines starting with """
+    new_ddl_statements = [statement for statement in ddl_statements if statement.startswith('''""")''')]
+
+    for statement in new_ddl_statements:
         # Print the list of newly added lines
-            print(statement)
+        print(statement)
+
+    if new_ddl_statements:
+        print("Starting execution of DDLs")
+        for statement in new_ddl_statements:
             create_tables(instance_id, database_id, statement)
+            
     else:
         print("No new lines provided, stopping execution.")
 
