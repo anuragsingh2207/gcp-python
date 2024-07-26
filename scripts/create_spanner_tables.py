@@ -65,6 +65,9 @@ def fetch_ddls():
     new_ddl_statements = [re.findall(r'''\"\"\"[^\"]+\"\"\"''', block) for block in added_blocks]
     new_ddl_statements = [stmt for sublist in new_ddl_statements for stmt in sublist] # flatten the list
 
+    # Stripping the triple quotes from the SQL statements
+    new_ddl_statements = [stmt.replace('''\"\"\"''', '').strip() for stmt in new_ddl_statements]
+
     for statement in new_ddl_statements:
         # Print the list of newly added lines
         print(statement)
