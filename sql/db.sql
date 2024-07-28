@@ -44,3 +44,9 @@ CREATE TABLE Customers (
                REFERENCES Customers (CustomerId) ON DELETE CASCADE
                ) PRIMARY KEY (CartId)
 ;
+
+CREATE TABLE Vistors (
+               VisitorId INT64 NOT NULL,
+               VisitorrName STRING(62) NOT NULL,
+               ) PRIMARY KEY (VisitorId)
+;
