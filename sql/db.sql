@@ -15,3 +15,17 @@ CREATE TABLE Albums (
     AlbumTitle   STRING(MAX)
 ) PRIMARY KEY (SingerId, AlbumId)
 ;
+
+CREATE TABLE Venues (
+            VenueId         INT64 NOT NULL,
+            VenueName       STRING(100),
+            VenueInfo       BYTES(MAX),
+            Capacity        INT64,
+            AvailableDates  ARRAY<DATE>,
+            LastContactDate DATE,
+            OutdoorVenue    BOOL,
+            PopularityScore FLOAT64,
+            LastUpdateTime  TIMESTAMP NOT NULL
+            OPTIONS(allow_commit_timestamp=true)
+        ) PRIMARY KEY (VenueId)
+;
