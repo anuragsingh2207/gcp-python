@@ -81,7 +81,7 @@ def main():
         print("Printing newly added sql lines ...")
         
         # Split the commands into a list of DDL statements
-        ddl_statements = new_sql_commands.split(';')[:-1]  # Discard the last split as it will be an empty string
+        ddl_statements = [stmt.strip() for stmt in new_sql_commands.split(';') if stmt.strip()]  # Discard the last split as it will be an empty string
 
         print(ddl_statements)
         print("Starting execution of DDLs")
