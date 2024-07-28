@@ -27,7 +27,6 @@ def create_tables(instance_id, database_id, ddl):
     try:
         from google.cloud.spanner_admin_database_v1.types import spanner_database_admin
 
-        print("Setting up connection with Spanner...")
         print(Fore.MAGENTA + "Waiting for operation to complete...")
         spanner_client = spanner.Client()
         database_admin_api = spanner_client.database_admin_api
@@ -82,16 +81,14 @@ def main():
     os.chdir('../sql')
     new_sql_commands = get_new_sql_lines("./db.sql")
     if new_sql_commands:
-        print("Printing newly added sql lines ...")
-        
+       
         # Split the commands into a list of DDL statements
         ddl_statements = [stmt.strip() for stmt in new_sql_commands.split(';') if stmt.strip()]  # Discard the last split as it will be an empty string
 
-        print(ddl_statements)
         print(Fore.CYAN + "Starting execution of DDLs...")
         create_tables(instance_id, database_id, ddl_statements)
     else:
-        print(Fore.RED + "No new lines provided, stopping execution.")
+        print(Fore.RED + "Empty SQL file, stopping execution.")
     
 
 if __name__ == "__main__":
