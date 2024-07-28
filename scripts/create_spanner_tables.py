@@ -50,32 +50,28 @@ def create_tables(instance_id, database_id, ddl):
         print(f"An error occurred: {e}")
         raise e
 
+
 def get_new_sql_lines(path_to_sql_file):
-    # Get unified diff for added lines
-    diff_output = subprocess.check_output(
-        ["git", "diff", "-U0", "HEAD~1", path_to_sql_file]
-    ).decode()
+    # Get previous version of file
+    previous_version = subprocess.check_output(["git", "show", "HEAD:"+path_to_sql_file]).decode().split('\n')
 
-    sql_commands = []
-    sql_command = ""
+    # Get current version of file
+    with open(path_to_sql_file, "r") as file:
+        current_version = file.readlines()
 
-    # Extract new SQL lines from diff
-    for line in diff_output.split('\n'):
-        if line.startswith('+') and not line.startswith('+++'):
-            # Append line to command without the '+'
-            sql_command += ' ' + line[1:].strip()
+    d = difflib.Differ()
+    diff = d.compare(previous_version, current_version)
 
-            if line.strip().endswith(';'):
-                # End of command. Append to list if not empty.
-                if sql_command.strip():
-                    sql_commands.append(sql_command.strip())
-                sql_command = ""
+    new_lines = []
 
-    # If there was no semicolon at the end of the last command append it
-    if sql_command.strip():
-        sql_commands.append(sql_command.strip())
+    # Extract new lines from diff
+    for line in diff:
+        if line.startswith('+ '):
+            # Append line to new_lines without the '+ '
+            new_lines.append(line[2:])
 
-    return sql_commands
+    # Join new lines together into a single string, and return
+    return ''.join(new_lines)
 
 
 def main():
@@ -83,10 +79,13 @@ def main():
     new_sql_commands = get_new_sql_lines("./db.sql")
     if new_sql_commands:
         print("Printing newly added sql lines ...")
-        print(new_sql_commands)
+        
+        # Split the commands into a list of DDL statements
+        ddl_statements = new_sql_commands.split(';')[:-1]  # Discard the last split as it will be an empty string
 
+        print(ddl_statements)
         print("Starting execution of DDLs")
-        create_tables(instance_id, database_id, new_sql_commands)
+        create_tables(instance_id, database_id, ddl_statements)
     else:
         print("No new lines provided, stopping execution.")
     
