@@ -29,3 +29,9 @@ CREATE TABLE Venues (
             OPTIONS(allow_commit_timestamp=true)
         ) PRIMARY KEY (VenueId)
 ;
+
+CREATE TABLE Customers (
+               CustomerId INT64 NOT NULL,
+               CustomerName STRING(62) NOT NULL,
+               ) PRIMARY KEY (CustomerId)
+;

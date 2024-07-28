@@ -20,35 +20,68 @@ OPERATION_TIMEOUT_SECONDS = 300
 
 from google.api_core.exceptions import AlreadyExists
 
+#To be Tested 
 def create_tables(instance_id, database_id, ddl):
     """Creates a database and tables for sample data."""
     try:
-        from google.cloud.spanner_admin_database_v1.types import \
-        spanner_database_admin
+        from google.cloud.spanner_admin_database_v1.types import spanner_database_admin
 
         print("Setting up connection with Spanner...")
         spanner_client = spanner.Client()
         database_admin_api = spanner_client.database_admin_api
 
-        request = spanner_database_admin.UpdateDatabaseDdlRequest(
-        database=database_admin_api.database_path(
-            spanner_client.project, instance_id, database_id
-        ),
-        statements=ddl      
-    )
-       
-        operation = database_admin_api.update_database_ddl(request)
-            
-        print("Waiting for operation to complete...")
-        database = operation.result(OPERATION_TIMEOUT_SECONDS)
+        database_path = database_admin_api.database_path(spanner_client.project, instance_id, database_id)
+        current_ddl = database_admin_api.get_database_ddl(database_path).statements
 
-        print("Executed DDLs on database {} on instance {}".format(
-            database_id, instance_id
-            )
-        )
+        for stmt in ddl:
+            table_name = stmt.split()[2]  # Assumes the ddl statement is `CREATE TABLE table_name (columns etc.)`
+            if any(table_name in cur_stmt for cur_stmt in current_ddl):
+                print(f"Table `{table_name}` already exists, skipping creation.")
+                continue  # Skip this ddl statement
+
+            request = spanner_database_admin.UpdateDatabaseDdlRequest(database=database_path, statements=[stmt])
+            operation = database_admin_api.update_database_ddl(request)
+
+            print("Waiting for operation to complete...")
+            operation.result(OPERATION_TIMEOUT_SECONDS)
+
+            print(f"Executed DDL on table `{table_name}` on database {database_id} on instance {instance_id}")
+
     except Exception as e:
         print(f"An error occurred: {e}")
         raise e
+
+
+# Working on new tables but not on existing tables 
+# def create_tables(instance_id, database_id, ddl):
+#     """Creates a database and tables for sample data."""
+#     try:
+#         from google.cloud.spanner_admin_database_v1.types import \
+#         spanner_database_admin
+
+#         print("Setting up connection with Spanner...")
+#         spanner_client = spanner.Client()
+#         database_admin_api = spanner_client.database_admin_api
+
+#         request = spanner_database_admin.UpdateDatabaseDdlRequest(
+#         database=database_admin_api.database_path(
+#             spanner_client.project, instance_id, database_id
+#         ),
+#         statements=ddl      
+#     )
+       
+#         operation = database_admin_api.update_database_ddl(request)
+            
+#         print("Waiting for operation to complete...")
+#         database = operation.result(OPERATION_TIMEOUT_SECONDS)
+
+#         print("Executed DDLs on database {} on instance {}".format(
+#             database_id, instance_id
+#             )
+#         )
+#     except Exception as e:
+#         print(f"An error occurred: {e}")
+#         raise e
 
 
 def get_new_sql_lines(path_to_sql_file):
