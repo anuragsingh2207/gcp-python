@@ -35,3 +35,12 @@ CREATE TABLE Customers (
                CustomerName STRING(62) NOT NULL,
                ) PRIMARY KEY (CustomerId)
 ;
+
+ CREATE TABLE ShoppingCarts (
+               CartId INT64 NOT NULL,
+               CustomerId INT64 NOT NULL,
+               CustomerName STRING(62) NOT NULL,
+               CONSTRAINT FKShoppingCartsCustomerId FOREIGN KEY (CustomerId)
+               REFERENCES Customers (CustomerId) ON DELETE CASCADE
+               ) PRIMARY KEY (CartId)
+;

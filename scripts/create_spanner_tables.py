@@ -31,7 +31,8 @@ def create_tables(instance_id, database_id, ddl):
         database_admin_api = spanner_client.database_admin_api
 
         database_path = database_admin_api.database_path(spanner_client.project, instance_id, database_id)
-        current_ddl = database_admin_api.get_database_ddl(database_path).statements
+        
+        current_ddl = database_admin_api.get_database_ddl(request={"database": database_path}).statements
 
         for stmt in ddl:
             table_name = stmt.split()[2]  # Assumes the ddl statement is `CREATE TABLE table_name (columns etc.)`
