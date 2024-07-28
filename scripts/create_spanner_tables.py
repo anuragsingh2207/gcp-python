@@ -28,7 +28,7 @@ def create_tables(instance_id, database_id, ddl):
         from google.cloud.spanner_admin_database_v1.types import spanner_database_admin
 
         print("Setting up connection with Spanner...")
-         print(Fore.MAGENTA + "Waiting for operation to complete...")
+        print(Fore.MAGENTA + "Waiting for operation to complete...")
         spanner_client = spanner.Client()
         database_admin_api = spanner_client.database_admin_api
 
