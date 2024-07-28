@@ -50,46 +50,32 @@ def create_tables(instance_id, database_id, ddl):
         print(f"An error occurred: {e}")
         raise e
 
-
-# def get_new_sql_lines(path_to_sql_file):
-#     # Get unified diff for added lines
-#     diff_output = subprocess.check_output(
-#         ["git", "diff", "-U0", "HEAD~1", path_to_sql_file],
-#         encoding="utf-8",
-#     ).splitlines()
-
-#     sql_commands = []
-#     sql_command = ""
-
-#     # Extract new SQL lines from diff
-#     for line in diff_output:
-#         if line.startswith('+') and not line.startswith('+++'):
-#             # Append line to command without the '+'
-#             sql_command += ' ' + line[1:].strip()
-
-#             if line.strip().endswith(';'):
-#                 # End of command. Append to list if not empty.
-#                 if sql_command.strip():
-#                     sql_commands.append(sql_command.strip())
-#                 sql_command = ""
-
-#     # If there was no semicolon at the end of the last command append it
-#     if sql_command.strip():
-#         sql_commands.append(sql_command.strip())
-
-#     return sql_commands
-
 def get_new_sql_lines(path_to_sql_file):
-    with open(path_to_sql_file) as f:
-        f.seek(0, 2)
-        new_line_start = f.tell()
-        f.seek(0)
-        sql_commands = []
-        for line in f.readlines():
-            if line.startswith('"""'):
-                sql_commands.append(line.strip())
-        f.seek(new_line_start)
-        return sql_commands
+    # Get unified diff for added lines
+    diff_output = subprocess.check_output(
+        ["git", "diff", "-U0", "HEAD~1", path_to_sql_file]
+    ).decode()
+
+    sql_commands = []
+    sql_command = ""
+
+    # Extract new SQL lines from diff
+    for line in diff_output.split('\n'):
+        if line.startswith('+') and not line.startswith('+++'):
+            # Append line to command without the '+'
+            sql_command += ' ' + line[1:].strip()
+
+            if line.strip().endswith(';'):
+                # End of command. Append to list if not empty.
+                if sql_command.strip():
+                    sql_commands.append(sql_command.strip())
+                sql_command = ""
+
+    # If there was no semicolon at the end of the last command append it
+    if sql_command.strip():
+        sql_commands.append(sql_command.strip())
+
+    return sql_commands
 
 
 def main():
