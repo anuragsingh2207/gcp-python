@@ -54,14 +54,15 @@ def create_tables(instance_id, database_id, ddl):
 def get_new_sql_lines(path_to_sql_file):
     # Get unified diff for added lines
     diff_output = subprocess.check_output(
-        ["git", "diff", "-U0", "HEAD~1", path_to_sql_file]
-    ).decode()
+        ["git", "diff", "-U0", "HEAD~1", path_to_sql_file],
+        encoding="utf-8",
+    ).splitlines()
 
     sql_commands = []
     sql_command = ""
 
     # Extract new SQL lines from diff
-    for line in diff_output.split('\n'):
+    for line in diff_output:
         if line.startswith('+') and not line.startswith('+++'):
             # Append line to command without the '+'
             sql_command += ' ' + line[1:].strip()
