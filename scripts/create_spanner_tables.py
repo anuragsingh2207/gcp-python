@@ -8,8 +8,6 @@ from colorama import Fore
 
 from google.cloud import spanner
 from google.cloud.spanner_admin_instance_v1.types import spanner_instance_admin
-from google.cloud.spanner_v1 import DirectedReadOptions, param_types
-from google.cloud.spanner_v1.data_types import JsonObject
 
 
 GOOGLE_APPLICATION_CREDENTIALS=os.environ['GOOGLE_APPLICATION_CREDENTIALS']
