@@ -15,3 +15,6 @@ CREATE TABLE Albums (
     AlbumTitle   STRING(MAX)
 ) PRIMARY KEY (SingerId, AlbumId)
 ;
+
+ALTER TABLE Albums ADD COLUMN MarketingBudget INT64
+;
